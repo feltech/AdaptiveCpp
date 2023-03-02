@@ -456,6 +456,25 @@ install(EXPORT install_exports
   DESTINATION ${HIPSYCL_INSTALL_CMAKE_DIR}
 )
 
+# Optionally create sycl-config, which just `include`s hipsycl-config.
+set(OPENSYCL_ADD_SYCL_CMAKE_CONFIG_desc
+    "Add CMake config file sycl-config, as well as hipsycl-config. Useful for downstream packages"
+    " that use find_package(SYCL).")
+option(OPENSYCL_ADD_SYCL_CMAKE_CONFIG "${OPENSYCL_ADD_SYCL_CMAKE_CONFIG_desc}" OFF)
+if (OPENSYCL_ADD_SYCL_CMAKE_CONFIG)
+  # Calculate relative include path, in case its been altered from the default.
+  file(RELATIVE_PATH HIPSYCL_SYCL_CONFIG_REL_DIR
+      ${PROJECT_BINARY_DIR}/${HIPSYCL_INSTALL_CMAKE_DIR}/../SYCL
+      ${PROJECT_BINARY_DIR}/${HIPSYCL_INSTALL_CMAKE_DIR})
+  # Create the config file that just delegates to hipsycl-config.
+  file(WRITE ${PROJECT_BINARY_DIR}/sycl-config.cmake
+      "include(\${CMAKE_CURRENT_LIST_DIR}/${HIPSYCL_SYCL_CONFIG_REL_DIR}/hipsycl-config.cmake)")
+  install(FILES
+    ${PROJECT_BINARY_DIR}/sycl-config.cmake
+      DESTINATION ${HIPSYCL_INSTALL_CMAKE_DIR}/../SYCL
+  )
+endif()
+
 mark_as_advanced(
   HIPSYCL_INSTALL_CMAKE_DIR
 )
