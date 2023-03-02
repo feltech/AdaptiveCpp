@@ -289,7 +289,7 @@ KernelOutliningPass::run(llvm::Module &M, llvm::ModuleAnalysisManager &AM) {
   // them early on, because it can get difficult to handle them once
   // we have removed what their aliasees. 
   llvm::SmallVector<llvm::GlobalAlias*, 16> AliasesToRemove;
-  for(auto& A : M.aliases()) 
+  for(auto& A : M.aliases())
     AliasesToRemove.push_back(&A);    
   // Need separate iteration, so that we don't erase stuff from the list
   // we are iterating over.
